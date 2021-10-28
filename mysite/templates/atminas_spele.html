@@ -1,0 +1,86 @@
+<head>
+    <title>Atmiņas spēle</title>
+    <link rel="stylesheet" href="static/stils.css" type="text/css"/>
+</head>
+<body>
+    <h1>Atmiņas spēle</h1>
+    <form>
+        <p>Izvēlies sarežģītības pakāpi</p>
+        <input type="button" onclick="laukums(3, 4);" value="Viegli">
+        <input type="button" onclick="laukums(4, 5);" value="Vidēji">
+        <input type="button" onclick="laukums(5, 6);" value="Grūti">
+        <input type="button" onclick="laukums(5, 8);" value="Eksperts">
+        <div id="dinamisks"></div>
+    </form>
+
+    <script>
+    let nosaukumi = ["Galvenais ceļš", "Dodiet ceļu", "Iebraukt aizliegts", "Braukt aizliegts", "Traktoriem braukt aizliegts", "Apdzīt aizliegts", "Apstāties aizliegts", "Stāvēt aizliegts", "Braukt taisni", "Braukt pa loku", "Gājēju ceļš", "Minimālā ātruma ierobežojums", "Vienvirziena ceļš","Dzīvojamā zona", "Tunelis", "Kempings", "Ceļa sašaurinājums", "Ātrumvalnis", "Ceļš ar bīstamām nomalēm", "Paceļams tilts", "Viensliežu dzelzceļa pārbrauktuve"];
+    let bildes = ["0ta.JPG", "pirma.JPG", "otra.JPG", "tresa.JPG", "4ta.JPG", "5ta.JPG", "6ta.JPG", "7ta.JPG", "8ta.JPG", "9ta.JPG", "10ta.JPG", "11ta.JPG", "12ta.JPG", "13ta.JPG", "14ta.JPG", "15ta.JPG", "16ta.JPG", "17ta.JPG", "18ta.JPG", "19ta.JPG", "20ta.JPG"];
+
+    function laukums(n, m){
+
+        let veca_tabula = document.getElementById("dinamisks").hasChildNodes();
+
+        if(veca_tabula == true){
+            while (document.getElementById("dinamisks").firstChild) {
+            document.getElementById("dinamisks").removeChild(document.getElementById("dinamisks").firstChild);
+            }
+        }
+
+        let p = document.createElement("P");
+        p.innerHTML = "Savieno ceļa zīmi ar tās nosaukumu!";
+        document.getElementById("dinamisks").appendChild(p);
+
+        let tabula = document.createElement("TABLE");
+        document.getElementById("dinamisks").appendChild(tabula);
+
+        var sajaukts_saraksts = randoms(n, m);
+        var karta = 0;
+
+        for(let i = 0; i < n; i++){
+            let rinda = document.createElement("TR");
+            tabula.appendChild(rinda);
+            //karta++;
+            for(let j = 0; j < m; j++){
+                let suna = document.createElement("TD");
+                rinda.appendChild(suna);
+                if (sajaukts_saraksts[karta].indexOf(".")<0){
+                    let teksts = document.createElement("P");
+                    teksts.innerHTML = sajaukts_saraksts[karta];
+                    suna.appendChild(teksts);
+                }else{
+                    let bilde = document.createElement("img");
+                    bilde.src = "/sta" + "tic/" + sajaukts_saraksts[karta];
+                    suna.appendChild(bilde);
+                }
+            karta++;
+
+            }
+        }
+    }
+
+    function randoms(n, m){
+        let amount = n * m / 2;
+        let index = [];
+        let random_pairs = [];
+        for(let i = 0; i < amount; i++){
+            var rand=Math.floor(Math.random()*21);
+            if (!index.includes(rand)){
+                index[i] = rand;
+                random_pairs.push(nosaukumi[index[i]]);
+                random_pairs.push(bildes[index[i]]);
+            }else{
+                i = i - 1;
+            }
+        }
+
+        for(let i=0;i<random_pairs.length;i++){
+                var rando=Math.floor(Math.random()*random_pairs.length);
+                var tmp=random_pairs[rando];
+                random_pairs[rando]=random_pairs[i];
+                random_pairs[i]=tmp;
+        }
+        return random_pairs;
+    }
+    </script>
+</body>
