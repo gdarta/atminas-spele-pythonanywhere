@@ -1,15 +1,41 @@
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
-        integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ=="
-        crossorigin="anonymous">
-        <title>Python Kalkulators</title>
+        <title>Python kalkulators</title>
     </head>
 
     <body>
-        <h1>kalkulators??</h1>
+        <h1>Kalkulators</h1>
+        <p>Ievadi divus skaitļus un nospied pogu, lai sareizinātu!</p>
+        <form action="https://gdarta.pythonanywhere.com/rezultats" method="POST">
+            <label for="pirmais">Pirmais skaitlis:</label><br>
+            <input type="text" name="pirmais"><br>
+            <label for="otrais">Otrais skaitlis:</label><br>
+            <input type="text" name="otrais"><br>
+            <input type="submit" value="spied!">
+        </form>
+        <div>
+            <p>Rezultāts: </p>{{ rez }}
+        </div>
+        <form action="https://gdarta.pythonanywhere.com/spelite">
+            <input type="submit" value="spēlīte!">
+        </form>
+        <img id="bilde">
+        <!--
+        <script>
+            fetch('/static/vardi.txt')
+            .then(response => response.text())
+            .then(data => console.log(data));
+
+            fetch('https://api.github.com/repos/javascript-tutorial/en.javascript.info/commits')
+            .then(response => response.json())
+            .then(commits => alert(commits[0].author.login));
+
+            let bilde=document.getElementById("bilde");
+            fetch('https://dog.ceo/api/breeds/image/random’)
+            .then(response => response.json())
+            .then(dati=> bilde.src=dati.message);
+
+        </script>
+        -->
     </body>
 </html>
