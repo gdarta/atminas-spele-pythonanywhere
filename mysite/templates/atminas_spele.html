@@ -40,21 +40,26 @@
         for(let i = 0; i < n; i++){
             let rinda = document.createElement("TR");
             tabula.appendChild(rinda);
-            //karta++;
+
             for(let j = 0; j < m; j++){
                 let suna = document.createElement("TD");
                 rinda.appendChild(suna);
-                if (sajaukts_saraksts[karta].indexOf(".")<0){
+                if (sajaukts_saraksts[karta].indexOf(".") < 0){
                     let teksts = document.createElement("P");
                     teksts.innerHTML = sajaukts_saraksts[karta];
                     suna.appendChild(teksts);
                 }else{
                     let bilde = document.createElement("img");
-                    bilde.src = "/sta" + "tic/" + sajaukts_saraksts[karta];
+                    bilde.src = "/static/" + sajaukts_saraksts[karta];
                     suna.appendChild(bilde);
                 }
-            karta++;
-
+                let vaks =document.createElement("img"); vaks.setAttribute("class", "overlay");
+                vaks.src = "/static/overlay.jpg";
+                suna.appendChild(vaks);
+                suna.addEventListener("click", function(){
+                    vaks.classList.toggle("hidden");
+                });
+                karta++;
             }
         }
     }
