@@ -16,55 +16,111 @@
     <script>
     let nosaukumi = ["Galvenais ceļš", "Dodiet ceļu", "Iebraukt aizliegts", "Braukt aizliegts", "Traktoriem braukt aizliegts", "Apdzīt aizliegts", "Apstāties aizliegts", "Stāvēt aizliegts", "Braukt taisni", "Braukt pa loku", "Gājēju ceļš", "Minimālā ātruma ierobežojums", "Vienvirziena ceļš","Dzīvojamā zona", "Tunelis", "Kempings", "Ceļa sašaurinājums", "Ātrumvalnis", "Ceļš ar bīstamām nomalēm", "Paceļams tilts", "Viensliežu dzelzceļa pārbrauktuve"];
     let bildes = ["0ta.JPG", "pirma.JPG", "otra.JPG", "tresa.JPG", "4ta.JPG", "5ta.JPG", "6ta.JPG", "7ta.JPG", "8ta.JPG", "9ta.JPG", "10ta.JPG", "11ta.JPG", "12ta.JPG", "13ta.JPG", "14ta.JPG", "15ta.JPG", "16ta.JPG", "17ta.JPG", "18ta.JPG", "19ta.JPG", "20ta.JPG"];
+    //masivi ar bildem un nosaukumiem
 
     function laukums(n, m){
 
-        let veca_tabula = document.getElementById("dinamisks").hasChildNodes();
+        dinamisks = document.getElementById("dinamisks");
+        let veca_tabula = dinamisks.hasChildNodes();
 
-        if(veca_tabula == true){
-            while (document.getElementById("dinamisks").firstChild) {
-            document.getElementById("dinamisks").removeChild(document.getElementById("dinamisks").firstChild);
+        if(veca_tabula == true){ //generejot jaunu tabulu, izdzes veco
+            while (dinamisks.firstChild) {
+            dinamisks.removeChild(dinamisks.firstChild);
             }
         }
 
         let p = document.createElement("P");
         p.innerHTML = "Savieno ceļa zīmi ar tās nosaukumu!";
-        document.getElementById("dinamisks").appendChild(p);
+        dinamisks.appendChild(p);
 
-        let tabula = document.createElement("TABLE");
-        document.getElementById("dinamisks").appendChild(tabula);
+        let tabula = document.createElement("TABLE"); //tabula, kas bus speles laukums
+        dinamisks.appendChild(tabula);
 
-        var sajaukts_saraksts = randoms(n, m);
-        var karta = 0;
+        let sajaukts_saraksts = randoms(n, m); //viens masivs, kura ir randoma sajaukti visi elementi
+        let karta = 0; //skaititajs, kas sekos lidzi, kurs pec kartas elements jaizvelas no sajaukts_saraksts
+        kliks = 0; //skaititajs, kas skaitis, cik kliksi ir veikti
+        pirmais = 0; otrais = 0; nn = n; mm = m; pari_skaits = n*m/2; pirmais_spiests = ""; otrais_spiests = "";
 
-        for(let i = 0; i < n; i++){
-            let rinda = document.createElement("TR");
+        for(let i = 0; i < n; i++){ //cikls, kas genere tabulu
+            let rinda = document.createElement("TR"); //tabulas rinda
             tabula.appendChild(rinda);
 
             for(let j = 0; j < m; j++){
-                let suna = document.createElement("TD");
+                var suna = document.createElement("TD"); //tabulas suna
                 rinda.appendChild(suna);
-                if (sajaukts_saraksts[karta].indexOf(".") < 0){
-                    let teksts = document.createElement("P");
+                if (sajaukts_saraksts[karta].indexOf(".") < 0){ //izveido teksta vai bildes elementu, ko ieliek sunaa
+                    let teksts = document.createElement("P"); suna.setAttribute("id", "teksts" + nosaukumi.indexOf(sajaukts_saraksts[karta]));
                     teksts.innerHTML = sajaukts_saraksts[karta];
                     suna.appendChild(teksts);
                 }else{
-                    let bilde = document.createElement("img");
+                    let bilde = document.createElement("img"); suna.setAttribute("id", "bildes" + bildes.indexOf(sajaukts_saraksts[karta]));
                     bilde.src = "/static/" + sajaukts_saraksts[karta];
                     suna.appendChild(bilde);
                 }
-                let vaks =document.createElement("img"); vaks.setAttribute("class", "overlay");
+                let vaks =document.createElement("img"); vaks.setAttribute("class", "overlay"); //bilde, kas iet pa virsu visam sunam
                 vaks.src = "/static/overlay.jpg";
                 suna.appendChild(vaks);
-                suna.addEventListener("click", function(){
-                    vaks.classList.toggle("hidden");
-                });
+                suna.addEventListener("click", clicking);
                 karta++;
             }
         }
+
     }
 
-    function randoms(n, m){
+    function clicking(){ //seko lidzi, kad suna tiek piespiesta
+            let elements = this.id; console.log("elementa id " + elements);
+            let cover = document.getElementById(elements).lastChild;
+            cover.style.visibility = "hidden";
+            if (kliks == 0){ //uznem laiku, sakot ar pirmo kliksi
+                start_time = performance.now();
+                console.log("starta laiks: " + start_time);
+            }
+
+            kliks++;
+            if (kliks % 2 != 0){
+                pirmais_spiests = cover;
+                pirmais = elements.substring(6);
+            }else{
+                otrais_spiests = cover;
+                otrais = elements.substring(6);
+                gameplay(kliks, pirmais, otrais, pirmais_spiests, otrais_spiests);
+
+            }
+
+        }
+
+    function gameplay(kliks, pirmais, otrais, pirmais_spiests, otrais_spiests){ //atkariba no ta, cik reizes sunas ir piespiestas, parbauda vai ir pareizs paris
+        //let pari = pari_skaits;
+        console.log(pirmais, otrais);
+        if(pirmais == otrais && pirmais_spiests.parentElement.id != otrais_spiests.parentElement.id ){
+            pari_skaits--; console.log("paru skaits: " + pari_skaits);
+            let nosaukums = document.getElementById("teksts" + pirmais);
+            let zimejums = document.getElementById("bildes" + pirmais);
+            nosaukums.removeEventListener("click", clicking);
+            zimejums.removeEventListener("click", clicking);
+        }else{
+            setTimeout(function(){pirmais_spiests.style.visibility = "visible"; otrais_spiests.style.visibility = "visible";}, 1000);
+        }
+        if (pari_skaits == 0){
+            end_time = performance.now();
+            let time = millisToMinutesAndSeconds(end_time - start_time);
+            let laiks = document.createElement("P");
+            laiks.innerHTML = " Laiks: " + time;
+            dinamisks.appendChild(laiks);
+        }
+    }
+
+    function millisToMinutesAndSeconds(millis) { //nozagu no stackoverflow
+        var minutes = Math.floor(millis / 60000);
+        var seconds = ((millis % 60000) / 1000).toFixed(0);
+        return (
+          seconds == 60 ?
+          (minutes+1) + ":00" :
+          minutes + ":" + (seconds < 10 ? "0" : "") + seconds
+        );
+    }
+
+    function randoms(n, m){ //izvelas noteiktu skaitu random paru, ko saliek viena sajaukta masiva sajaukts_saraksts
         let amount = n * m / 2;
         let index = [];
         let random_pairs = [];
